@@ -1,5 +1,5 @@
 ///|
-type VarId Int derive(Eq)
+type VarId Int derive(Eq, Hash)
 
 ///|
 pub(all) enum Val {
@@ -45,8 +45,8 @@ fn to_subscript(n : Int) -> String {
     loop n {
       0 => b..write_char('_').to_string().rev()
       n => {
-        // '₀' starts at Unicode 0x2080
-        b.write_char(Char::from_int(0x2080 + n % 10))
+        let sub_0 = '₀'.to_int()
+        b.write_char(Char::from_int(sub_0 + n % 10))
         continue n / 10
       }
     }
