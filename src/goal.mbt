@@ -50,6 +50,7 @@ fn run_and_display(f : (Val) -> Goal, n? : Int) -> String {
   |> String::concat(separator="\n")
 }
 
+///|
 test "or" {
   inspect!(
     run_and_display(fn {
@@ -64,6 +65,7 @@ test "or" {
   )
 }
 
+///|
 test "and" {
   inspect!(
     run_and_display(fn {
@@ -77,6 +79,7 @@ test "and" {
   )
 }
 
+///|
 test "delay" {
   fn manyo {
     g => g | delay(fn() { manyo(g) })

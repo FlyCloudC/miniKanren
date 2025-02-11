@@ -27,6 +27,7 @@ pub fn listo(v : Val) -> Goal {
   })
 }
 
+///|
 test "listo" {
   inspect!(
     run_and_display(n=4, fn { v => listo(v) }),
@@ -90,6 +91,7 @@ fn int_list(n : Int) -> Val {
   n.until(0, step=-1).fold(init=Nil, fn { r, l => Pair(Int(l), r) })
 }
 
+///|
 test "appendo" {
   inspect!(
     run_and_display(fn {

@@ -29,6 +29,7 @@ fn mix[A](self : Stream[A], other : Stream[A]) -> Stream[A] {
   }
 }
 
+///|
 test "mix" {
   fn int_stream_from(i) {
     Cons(i, Suspension(fn() { int_stream_from(i + 1) }))
@@ -52,6 +53,7 @@ fn map_fold_mix[A](self : Stream[A], f : (A) -> Stream[A]) -> Stream[A] {
   }
 }
 
+///|
 test "map_fold_mix" {
   fn int_stream_from(i) {
     Cons(i, Suspension(fn() { int_stream_from(i + 1) }))
