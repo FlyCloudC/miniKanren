@@ -1,0 +1,55 @@
+package FlyCloudC/miniKanren
+
+// Values
+fn appendo(Val, Val, Val) -> Goal
+
+fn caro(Val, Val) -> Goal
+
+fn cdro(Val, Val) -> Goal
+
+fn conso(Val, Val, Val) -> Goal
+
+fn delay(() -> Goal) -> Goal
+
+fn eqo(Val, Val) -> Goal
+
+fn fresh_var() -> Val
+
+fn fresh_var_2() -> (Val, Val)
+
+fn fresh_var_3() -> (Val, Val, Val)
+
+fn list(Array[Val]) -> Val
+
+fn listo(Val) -> Goal
+
+fn membero(Val, Val) -> Goal
+
+fn nilo(Val) -> Goal
+
+fn run((Val) -> Goal) -> Iter[Val]
+
+// Types and methods
+type Goal
+impl Goal {
+  land(Self, Self) -> Self
+  lor(Self, Self) -> Self
+}
+
+pub(all) enum Val {
+  Int(Int)
+  Nil
+  Pair(Val, Val)
+  Var(VarId)
+}
+impl Eq for Val
+impl Show for Val
+
+type VarId
+impl Eq for VarId
+impl Hash for VarId
+
+// Type aliases
+
+// Traits
+

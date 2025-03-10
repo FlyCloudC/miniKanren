@@ -1,5 +1,5 @@
 ///|
-enum Stream[A] {
+priv enum Stream[A] {
   Empty
   Cons(A, Stream[A])
   Suspension(() -> Stream[A])

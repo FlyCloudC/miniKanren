@@ -1,5 +1,5 @@
 ///| A Substitution cannot contain two or more associations with the same car.
-type Sub @immut/list.T[(VarId, Val)]
+priv type Sub @immut/list.T[(VarId, Val)]
 
 ///|
 let empty_substitution : Sub = Sub(Nil)
