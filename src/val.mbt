@@ -1,4 +1,5 @@
 ///|
+/// Represents a unique identifier for logic variables.
 type VarId Int derive(Eq, Hash)
 
 ///|
@@ -10,7 +11,21 @@ pub(all) enum Val {
 } derive(Eq)
 
 ///|
-pub fn list(vs : Array[Val]) -> Val {
+/// Creates a list from an array of values. The resulting list is represented
+/// as nested pairs terminated by `Nil`.
+///
+/// Example:
+///
+/// ```moonbit
+/// ///|
+/// test "list_from_array" {
+///   assert_eq!(
+///     list_from_array([Int(1), Int(2), Int(3)]),
+///     Pair(Int(1), Pair(Int(2), Pair(Int(3), Nil))),
+///   )
+/// }
+/// ```
+pub fn list_from_array(vs : Array[Val]) -> Val {
   vs.rev_fold(init=Nil, fn { acc, v => Pair(v, acc) })
 }
 
@@ -24,14 +39,16 @@ fn new_fresh_var_generator() -> () -> Val {
 }
 
 ///|
+/// Creates a new, unique logic variable. Each call to this function returns a
+/// different variable.
 pub let fresh_var : () -> Val = new_fresh_var_generator()
 
-///|
+///| Creates 2 new, unique logic variables.
 pub fn fresh_var_2() -> (Val, Val) {
   (fresh_var(), fresh_var())
 }
 
-///|
+///| Creates 3 new, unique logic variables.
 pub fn fresh_var_3() -> (Val, Val, Val) {
   (fresh_var(), fresh_var(), fresh_var())
 }
