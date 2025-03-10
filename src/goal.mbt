@@ -39,6 +39,11 @@ pub fn run(f : (Val) -> Goal) -> Iter[Val] {
 }
 
 ///|
+pub fn run1(f : (Val) -> Goal) -> Val {
+  run(f).peek().unwrap()
+}
+
+///|
 fn run_and_display(f : (Val) -> Goal, n? : Int) -> String {
   let vals = run(f)
   (match n {
