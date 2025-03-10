@@ -1,26 +1,27 @@
 # FlyFloudC/miniKanren
 
-miniKanren implemented in MoonBit.
+The logic programming language, miniKanren.
 
-It a Domain Specific Languages for logic programming.
+More information: 
 
-http://minikanren.org/
+* Daniel P. Friedman, William E. Byrd, Oleg Kiselyov, and Jason Hemann - [The Reasoned Schemer](https://mitpress.mit.edu/books/reasoned-schemer-second-edition)
+* [miniKanren.org](https://minikanren.org/)
 
 ## Example
 
 ```moonbit
-run_and_display(
-  n=10,
-  fn {
-    v =>
-      listo(v) & //
-      membero(Int(1), v) &
-      membero(Int(0), v)
-  },
-)
+// find all lists whose 1 and 0 are both in it
+let solutions : Iter[Val] = run(fn {
+  v =>
+    listo(v) & //
+    membero(Int(1), v) &
+    membero(Int(0), v)
+})
+
+solutions.take(10).each(println)
 ```
 
-The result is
+The output is
 
 ```scheme
 (1 0)
