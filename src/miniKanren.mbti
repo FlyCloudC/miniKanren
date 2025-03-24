@@ -19,7 +19,7 @@ fn fresh_var_2() -> (Val, Val)
 
 fn fresh_var_3() -> (Val, Val, Val)
 
-fn list(Array[Val]) -> Val
+fn list_from_array(Array[Val]) -> Val
 
 fn listo(Val) -> Goal
 
@@ -29,12 +29,12 @@ fn nilo(Val) -> Goal
 
 fn run((Val) -> Goal) -> Iter[Val]
 
+fn run1((Val) -> Goal) -> Val
+
 // Types and methods
 type Goal
-impl Goal {
-  land(Self, Self) -> Self
-  lor(Self, Self) -> Self
-}
+impl BitAnd for Goal
+impl BitOr for Goal
 
 pub(all) enum Val {
   Int(Int)

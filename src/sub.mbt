@@ -6,11 +6,11 @@ let empty_substitution : Sub = Sub(Nil)
 
 ///|
 fn walk(s : Sub, v : Val) -> Val {
-  match v {
+  loop v {
     Var(x) =>
       match s._.lookup(x) {
         None => v
-        Some(v_) => walk(s, v_)
+        Some(v_) => continue v_
       }
     wv => wv
   }
@@ -38,17 +38,12 @@ fn unify(self : Sub, v1 : Val, v2 : Val) -> Sub? {
     }
   }
 
-  let wv1 = walk(self, v1)
-  let wv2 = walk(self, v2)
-  if wv1 == wv2 {
-    Some(self)
-  } else {
-    match (wv1, wv2) {
-      (Var(fx), wv) | (wv, Var(fx)) => ext(fx, wv)
-      (Pair(l1, r1), Pair(l2, r2)) =>
-        self.unify(l1, l2).bind(fn { s_ => s_.unify(r1, r2) })
-      _ => None
-    }
+  match (walk(self, v1), walk(self, v2)) {
+    (wv1, wv2) if wv1 == wv2 => Some(self)
+    (Var(fx), wv) | (wv, Var(fx)) => ext(fx, wv)
+    (Pair(l1, r1), Pair(l2, r2)) =>
+      self.unify(l1, l2).bind(fn { s_ => s_.unify(r1, r2) })
+    _ => None
   }
 }
 

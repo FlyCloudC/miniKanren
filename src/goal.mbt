@@ -40,12 +40,12 @@ pub fn eqo(u : Val, v : Val) -> Goal {
 }
 
 ///|
-pub fn Goal::lor(g1 : Goal, g2 : Goal) -> Goal {
+pub impl BitOr for Goal with lor(g1, g2) {
   Goal(fn { s => g1.apply(s).mix(g2.apply(s)) })
 }
 
 ///|
-pub fn Goal::land(g1 : Goal, g2 : Goal) -> Goal {
+pub impl BitAnd for Goal with land(g1, g2) {
   Goal(fn { s => g1.apply(s).map_fold_mix(g2._) })
 }
 
@@ -137,7 +137,7 @@ fn run_and_display(f : (Val) -> Goal, n? : Int) -> String {
   })
   .map(Val::to_string)
   .to_array()
-  |> String::concat(separator="\n")
+  |> @string.concat(separator="\n")
 }
 
 ///|
