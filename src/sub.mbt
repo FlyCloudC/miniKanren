@@ -7,7 +7,7 @@ let empty_substitution : Sub = Sub(Nil)
 ///|
 fn walk(s : Sub, v : Val) -> Val {
   loop v {
-    Var(x) =>
+    Var(x) as v =>
       match s._.lookup(x) {
         None => v
         Some(v_) => continue v_

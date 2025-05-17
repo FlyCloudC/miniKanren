@@ -63,7 +63,7 @@ fn to_subscript(n : Int) -> String {
       0 => b..write_char('_').to_string().rev()
       n => {
         let sub_0 = '₀'.to_int()
-        b.write_char(Char::from_int(sub_0 + n % 10))
+        b.write_char(Int::unsafe_to_char(sub_0 + n % 10))
         continue n / 10
       }
     }
