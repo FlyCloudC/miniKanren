@@ -27,7 +27,7 @@ fn apply(self : Goal, s : Sub) -> Stream[Sub] {
 /// ```moonbit
 /// ///|
 /// test "eqo" {
-///   inspect!(run1(fn { x => eqo(x, Int(42)) }), content="42")
+///   inspect(run1(fn { x => eqo(x, Int(42)) }), content="42")
 /// }
 /// ```
 pub fn eqo(u : Val, v : Val) -> Goal {
@@ -71,7 +71,7 @@ pub impl BitAnd for Goal with land(g1, g2) {
 ///     g | delay(fn() { manyo(g) })
 ///   }
 ///
-///   inspect!(run1(fn { x => manyo(eqo(x, Int(1))) }), content="1")
+///   inspect(run1(fn { x => manyo(eqo(x, Int(1))) }), content="1")
 /// }
 /// ```
 pub fn delay(goal_fn : () -> Goal) -> Goal {
@@ -94,7 +94,7 @@ pub fn delay(goal_fn : () -> Goal) -> Goal {
 /// ```moonbit
 /// ///|
 /// test "run" {
-///   inspect!(run(fn { x => eqo(x, Int(42)) }), content="[42]")
+///   inspect(run(fn { x => eqo(x, Int(42)) }), content="[42]")
 /// }
 /// ```
 pub fn run(query : (Val) -> Goal) -> Iter[Val] {
@@ -120,7 +120,7 @@ pub fn run(query : (Val) -> Goal) -> Iter[Val] {
 /// ```moonbit
 /// ///|
 /// test "run1" {
-///   inspect!(run1(fn { x => eqo(x, Int(42)) }), content="42")
+///   inspect(run1(fn { x => eqo(x, Int(42)) }), content="42")
 /// }
 /// ```
 #internal(unsafe, "Panic if there is no solution.")
@@ -141,7 +141,7 @@ fn run_and_display(f : (Val) -> Goal, n? : Int) -> String {
 
 ///|
 test "or" {
-  inspect!(
+  inspect(
     run_and_display(fn {
       v =>
         eqo(v, Int(1)) | //
@@ -156,7 +156,7 @@ test "or" {
 
 ///|
 test "and" {
-  inspect!(
+  inspect(
     run_and_display(fn {
       v => {
         let t = fresh_var()
@@ -166,7 +166,7 @@ test "and" {
     }),
     content="1",
   )
-  assert_eq!(
+  assert_eq(
     run(fn {
       v =>
         eqo(v, Int(1)) & //
@@ -182,7 +182,7 @@ test "delay" {
     g => g | delay(fn() { manyo(g) })
   }
 
-  inspect!(
+  inspect(
     run_and_display(n=5, fn {
       v => manyo(eqo(v, Int(1))) //
     }),

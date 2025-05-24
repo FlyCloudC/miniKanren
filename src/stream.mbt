@@ -35,7 +35,7 @@ test "mix" {
     Cons(i, Suspension(fn() { int_stream_from(i + 1) }))
   }
 
-  inspect!(
+  inspect(
     int_stream_from(100).mix(int_stream_from(200)).iter().take(10),
     content="[100, 200, 101, 201, 102, 202, 103, 203, 104, 204]",
   )
@@ -65,7 +65,7 @@ test "map_fold_mix" {
 
   let a = int_stream_from(1).map_fold_mix(f)
   let a40 = a.iter().take(40).collect()
-  assert_true!(a40.search(103) != None)
-  assert_true!(a40.search(203) != None)
-  assert_true!(a40.search(303) != None)
+  assert_true(a40.search(103) != None)
+  assert_true(a40.search(203) != None)
+  assert_true(a40.search(303) != None)
 }

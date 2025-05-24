@@ -19,7 +19,7 @@ pub(all) enum Val {
 /// ```moonbit
 /// ///|
 /// test "list_from_array" {
-///   assert_eq!(
+///   assert_eq(
 ///     list_from_array([Int(1), Int(2), Int(3)]),
 ///     Pair(Int(1), Pair(Int(2), Pair(Int(3), Nil))),
 ///   )

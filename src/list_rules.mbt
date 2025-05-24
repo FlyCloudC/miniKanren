@@ -35,7 +35,7 @@ pub fn listo(v : Val) -> Goal {
 
 ///|
 test "listo" {
-  inspect!(
+  inspect(
     run_and_display(n=4, fn { v => listo(v) }),
     content=
       #|()
@@ -58,7 +58,7 @@ pub fn membero(e : Val, ls : Val) -> Goal {
 
 ///|
 test "membero" {
-  inspect!(
+  inspect(
     run_and_display(n=10, fn {
       v =>
         listo(v) & //
@@ -99,7 +99,7 @@ test "appendo" {
     n.until(0, step=-1).fold(init=Nil, fn { r, l => Pair(Int(l), r) })
   }
 
-  inspect!(
+  inspect(
     run_and_display(fn {
       v => {
         let (l1, l2, l3) = fresh_var_3()
