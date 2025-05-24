@@ -1,8 +1,8 @@
 ///| A Substitution cannot contain two or more associations with the same car.
-priv type Sub @immut/list.T[(VarId, Val)]
+priv type Sub @list.T[(VarId, Val)]
 
 ///|
-let empty_substitution : Sub = Sub(Nil)
+let empty_substitution : Sub = Sub(@list.empty())
 
 ///|
 fn walk(s : Sub, v : Val) -> Val {
@@ -34,7 +34,7 @@ fn unify(self : Sub, v1 : Val, v2 : Val) -> Sub? {
     if occur_in_fx(wv) {
       None
     } else {
-      Some(Sub(Cons((fx, wv), self._)))
+      Some(Sub(self._.add((fx, wv))))
     }
   }
 
