@@ -1,4 +1,4 @@
-package FlyCloudC/miniKanren
+package "FlyCloudC/miniKanren"
 
 // Values
 fn appendo(Val, Val, Val) -> Goal
