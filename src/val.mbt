@@ -77,14 +77,14 @@ pub impl Show for Val with output(self, logger) {
     Var(VarId(x)) => logger.write_string(to_subscript(x))
     Nil => logger.write_string("()")
     Pair(l, r) => {
-      logger..write_char('(').write_object(l)
+      logger..write_char('(')..write_object(l)
       loop r {
         Nil => logger.write_char(')')
         Pair(l, r) => {
-          logger..write_char(' ').write_object(l)
+          logger..write_char(' ')..write_object(l)
           continue r
         }
-        v => logger..write_string(" . ")..write_object(v).write_char(')')
+        v => logger..write_string(" . ")..write_object(v)..write_char(')')
       }
     }
   }

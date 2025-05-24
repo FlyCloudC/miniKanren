@@ -100,7 +100,7 @@ pub fn delay(goal_fn : () -> Goal) -> Goal {
 pub fn run(query : (Val) -> Goal) -> Iter[Val] {
   let query_var = fresh_var()
   let subs = query(query_var).apply(empty_substitution)
-  subs.iter().map(fn { s => reify(s, query_var) })
+  subs.iter().map(reify(_, query_var))
 }
 
 ///|
@@ -123,7 +123,7 @@ pub fn run(query : (Val) -> Goal) -> Iter[Val] {
 ///   inspect!(run1(fn { x => eqo(x, Int(42)) }), content="42")
 /// }
 /// ```
-/// @alert unsafe "Panic if there is no solution."
+#internal(unsafe, "Panic if there is no solution.")
 pub fn run1(query : (Val) -> Goal) -> Val {
   run(query).peek().unwrap()
 }
@@ -135,9 +135,8 @@ fn run_and_display(f : (Val) -> Goal, n? : Int) -> String {
     Some(n) => vals.take(n)
     None => vals
   })
-  .map(Val::to_string)
-  .to_array()
-  |> @string.concat(separator="\n")
+  .map(_.to_string())
+  .join("\n")
 }
 
 ///|

@@ -104,7 +104,7 @@ test "appendo" {
       v => {
         let (l1, l2, l3) = fresh_var_3()
         let l12 = fresh_var()
-        appendo(l12, l3, int_list(3)) & //
+        appendo(l12, l3, int_list(3)) &
         appendo(l1, l2, l12) &
         eqo(v, list_from_array([l1, l2, l3]))
       }

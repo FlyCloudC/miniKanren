@@ -41,8 +41,7 @@ fn unify(self : Sub, v1 : Val, v2 : Val) -> Sub? {
   match (walk(self, v1), walk(self, v2)) {
     (wv1, wv2) if wv1 == wv2 => Some(self)
     (Var(fx), wv) | (wv, Var(fx)) => ext(fx, wv)
-    (Pair(l1, r1), Pair(l2, r2)) =>
-      self.unify(l1, l2).bind(fn { s_ => s_.unify(r1, r2) })
+    (Pair(l1, r1), Pair(l2, r2)) => self.unify(l1, l2).bind(_.unify(r1, r2))
     _ => None
   }
 }
