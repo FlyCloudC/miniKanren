@@ -44,7 +44,7 @@ test "mix" {
 ///|
 /// s = (s1 s2 s3 ...)
 /// 
-/// append_map_fold_mix(s, f) = mix(f(s1), mix(f(s2), mix(f(s3), ...)))
+/// map_fold_mix(s, f) = mix(f(s1), mix(f(s2), mix(f(s3), ...)))
 fn[A] map_fold_mix(self : Stream[A], f : (A) -> Stream[A]) -> Stream[A] {
   match self {
     Empty => Empty
