@@ -48,6 +48,7 @@ impl Show for Val
 type VarId
 impl Eq for VarId
 impl Hash for VarId
+impl Show for VarId
 
 // Type aliases
 

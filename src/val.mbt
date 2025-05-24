@@ -54,27 +54,10 @@ pub fn fresh_var_3() -> (Val, Val, Val) {
 }
 
 ///|
-fn to_subscript(n : Int) -> String {
-  if n == 0 {
-    "_₀"
-  } else {
-    let b = StringBuilder::new()
-    loop n {
-      0 => b..write_char('_').to_string().rev()
-      n => {
-        let sub_0 = '₀'.to_int()
-        b.write_char(Int::unsafe_to_char(sub_0 + n % 10))
-        continue n / 10
-      }
-    }
-  }
-}
-
-///|
 pub impl Show for Val with output(self, logger) {
   match self {
     Int(i) => i.output(logger)
-    Var(VarId(x)) => logger.write_string(to_subscript(x))
+    Var(x) => x.output(logger)
     Nil => logger.write_string("()")
     Pair(l, r) => {
       logger..write_char('(')..write_object(l)
@@ -88,4 +71,18 @@ pub impl Show for Val with output(self, logger) {
       }
     }
   }
+}
+
+///|
+const SUBSCRIPT_0 : Int = '₀'
+
+///|
+pub impl Show for VarId with output(self, logger) {
+  guard self._ > 0 else { logger.write_string("_₀") }
+  let digits = Array::new(capacity=4)
+  for n = self._; n > 0; n = n / 10 {
+    digits.push((SUBSCRIPT_0 + n % 10).unsafe_to_char())
+  }
+  logger.write_char('_')
+  digits.rev_each(logger.write_char(_))
 }
