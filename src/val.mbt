@@ -1,6 +1,16 @@
 ///|
 /// Represents a unique identifier for logic variables.
-type VarId Int derive(Eq, Hash)
+type VarId Int derive(Eq)
+
+///|
+pub impl Hash for VarId with hash_combine(self, hasher) {
+  hasher.combine_int(self._)
+}
+
+///|
+pub impl Hash for VarId with hash(self) {
+  self._
+}
 
 ///|
 pub(all) enum Val {
