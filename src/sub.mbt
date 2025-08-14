@@ -1,5 +1,5 @@
 ///| A Substitution cannot contain two or more associations with the same car.
-priv type Sub @immut/hashmap.T[VarId, Val]
+priv struct Sub(@immut/hashmap.T[VarId, Val])
 
 ///|
 let empty_substitution : Sub = Sub(@immut/hashmap.new())
@@ -8,7 +8,7 @@ let empty_substitution : Sub = Sub(@immut/hashmap.new())
 fn walk(s : Sub, v : Val) -> Val {
   loop v {
     Var(x) as v =>
-      match s._.get(x) {
+      match s.0.get(x) {
         None => v
         Some(v_) => continue v_
       }
@@ -34,7 +34,7 @@ fn unify(self : Sub, v1 : Val, v2 : Val) -> Sub? {
     if occur_in_fx(wv) {
       None
     } else {
-      Some(Sub(self._.add(fx, wv)))
+      Some(Sub(self.0.add(fx, wv)))
     }
   }
 

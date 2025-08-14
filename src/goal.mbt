@@ -1,12 +1,7 @@
 ///|
 /// A `Goal` is a function that takes a substitution and returns a stream of 
 /// substitutions that satisfy the goal.
-type Goal (Sub) -> Stream[Sub]
-
-///|
-fn apply(self : Goal, s : Sub) -> Stream[Sub] {
-  (self._)(s)
-}
+struct Goal((Sub) -> Stream[Sub])
 
 ///|
 /// Creates a goal that unifies two values in a logic programming context. The
@@ -25,10 +20,7 @@ fn apply(self : Goal, s : Sub) -> Stream[Sub] {
 /// Example:
 ///
 /// ```moonbit
-/// ///|
-/// test "eqo" {
-///   inspect(run1(fn { x => eqo(x, Int(42)) }), content="42")
-/// }
+/// inspect(run1(x => eqo(x, Int(42))), content="42")
 /// ```
 pub fn eqo(u : Val, v : Val) -> Goal {
   Goal(fn(s) {
@@ -41,12 +33,12 @@ pub fn eqo(u : Val, v : Val) -> Goal {
 
 ///|
 pub impl BitOr for Goal with lor(g1, g2) {
-  Goal(fn { s => g1.apply(s).mix(g2.apply(s)) })
+  Goal(s => g1(s).mix(g2(s)))
 }
 
 ///|
 pub impl BitAnd for Goal with land(g1, g2) {
-  Goal(fn { s => g1.apply(s).map_fold_mix(g2._) })
+  Goal(s => g1(s).map_fold_mix(g2.inner()))
 }
 
 ///|
@@ -65,17 +57,14 @@ pub impl BitAnd for Goal with land(g1, g2) {
 /// Example:
 ///
 /// ```moonbit
-/// ///|
-/// test "delay" {
-///   fn manyo(g : Goal) -> Goal {
-///     g | delay(fn() { manyo(g) })
-///   }
-///
-///   inspect(run1(fn { x => manyo(eqo(x, Int(1))) }), content="1")
+/// fn manyo(g : Goal) -> Goal {
+///   g | delay(() => manyo(g))
 /// }
+/// 
+/// inspect(run1(x => manyo(eqo(x, Int(1)))), content="1")
 /// ```
 pub fn delay(goal_fn : () -> Goal) -> Goal {
-  Goal(fn(s) { Suspension(fn() { goal_fn().apply(s) }) })
+  Goal(fn(s) { Suspension(() => goal_fn()(s)) })
 }
 
 ///|
@@ -92,14 +81,11 @@ pub fn delay(goal_fn : () -> Goal) -> Goal {
 /// Example:
 ///
 /// ```moonbit
-/// ///|
-/// test "run" {
-///   inspect(run(fn { x => eqo(x, Int(42)) }), content="[42]")
-/// }
+/// inspect(run(x => eqo(x, Int(42))), content="[42]")
 /// ```
 pub fn run(query : (Val) -> Goal) -> Iter[Val] {
   let query_var = fresh_var()
-  let subs = query(query_var).apply(empty_substitution)
+  let subs = query(query_var)(empty_substitution)
   subs.iter().map(reify(_, query_var))
 }
 
@@ -118,10 +104,7 @@ pub fn run(query : (Val) -> Goal) -> Iter[Val] {
 /// Example:
 ///
 /// ```moonbit
-/// ///|
-/// test "run1" {
-///   inspect(run1(fn { x => eqo(x, Int(42)) }), content="42")
-/// }
+/// inspect(run1(x => eqo(x, Int(42))), content="42")
 /// ```
 #internal(unsafe, "Panic if there is no solution.")
 pub fn run1(query : (Val) -> Goal) -> Val {
@@ -142,56 +125,41 @@ fn run_and_display(f : (Val) -> Goal, n? : Int) -> String {
 ///|
 test "or" {
   inspect(
-    run_and_display(fn {
-      v =>
-        eqo(v, Int(1)) | //
-        eqo(v, Int(2))
-    }),
-    content=
+    run_and_display(v => eqo(v, Int(1)) | eqo(v, Int(2))),
+    content=(
       #|1
       #|2
-    ,
+    ),
   )
 }
 
 ///|
 test "and" {
   inspect(
-    run_and_display(fn {
-      v => {
-        let t = fresh_var()
-        eqo(t, Int(1)) & //
-        eqo(v, t)
-      }
+    run_and_display(v => {
+      let t = fresh_var()
+      eqo(t, Int(1)) & //
+      eqo(v, t)
     }),
     content="1",
   )
-  assert_eq(
-    run(fn {
-      v =>
-        eqo(v, Int(1)) & //
-        eqo(v, Int(2))
-    }).count(),
-    0,
-  )
+  assert_eq(run(v => eqo(v, Int(1)) & eqo(v, Int(2))).count(), 0)
 }
 
 ///|
 test "delay" {
-  fn manyo {
-    g => g | delay(fn() { manyo(g) })
+  fn manyo(g) {
+    g | delay(() => manyo(g))
   }
 
   inspect(
-    run_and_display(n=5, fn {
-      v => manyo(eqo(v, Int(1))) //
-    }),
-    content=
+    run_and_display(n=5, v => manyo(eqo(v, Int(1)))),
+    content=(
       #|1
       #|1
       #|1
       #|1
       #|1
-    ,
+    ),
   )
 }

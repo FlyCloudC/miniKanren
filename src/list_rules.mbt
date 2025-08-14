@@ -27,7 +27,7 @@ pub fn cdro(p : Val, d : Val) -> Goal {
 /// A list is either an empty list or the cons of a value and another list.
 pub fn listo(v : Val) -> Goal {
   nilo(v) |
-  delay(fn() {
+  delay(() => {
     let d = fresh_var()
     cdro(v, d) & listo(d)
   })
@@ -36,36 +36,31 @@ pub fn listo(v : Val) -> Goal {
 ///|
 test "listo" {
   inspect(
-    run_and_display(n=4, fn { v => listo(v) }),
-    content=
+    run_and_display(n=4, v => listo(v)),
+    content=(
       #|()
       #|(_₀)
       #|(_₀ _₁)
       #|(_₀ _₁ _₂)
-    ,
+    ),
   )
 }
 
 ///|
 /// `membero(e, ls)` means that `e` is a member of `ls`
 pub fn membero(e : Val, ls : Val) -> Goal {
-  caro(ls, e) |
-  delay(fn() {
-    let d = fresh_var()
-    cdro(ls, d) & membero(e, d)
-  })
+  let d = fresh_var()
+  conso(e, d, ls) | delay(() => cdro(ls, d) & membero(e, d))
 }
 
 ///|
 test "membero" {
   inspect(
-    run_and_display(n=10, fn {
-      v =>
-        listo(v) & //
-        membero(Int(1), v) &
-        membero(Int(0), v)
-    }),
-    content=
+    run_and_display(
+      n=10, //
+      v => listo(v) & membero(Int(1), v) & membero(Int(0), v),
+    ),
+    content=(
       #|(1 0)
       #|(0 1)
       #|(1 0 _₀)
@@ -76,14 +71,14 @@ test "membero" {
       #|(0 _₀ 1)
       #|(1 _₀ 0 _₁)
       #|(1 _₀ _₁ 0)
-    ,
+    ),
   )
 }
 
 ///| `appendo(l1, l2, o)` means that the result of appending `l1` to `l2` is `o`.
 pub fn appendo(l1 : Val, l2 : Val, o : Val) -> Goal {
   (nilo(l1) & eqo(l2, o)) |
-  delay(fn() {
+  delay(() => {
     let l1a = fresh_var()
     let l1d = fresh_var()
     let od = fresh_var()
@@ -96,20 +91,18 @@ pub fn appendo(l1 : Val, l2 : Val, o : Val) -> Goal {
 ///|
 test "appendo" {
   fn int_list(n : Int) -> Val {
-    n.until(0, step=-1).fold(init=Nil, fn { r, l => Pair(Int(l), r) })
+    n.until(0, step=-1).fold(init=Nil, (r, l) => Pair(Int(l), r))
   }
 
   inspect(
-    run_and_display(fn {
-      v => {
-        let (l1, l2, l3) = fresh_var_3()
-        let l12 = fresh_var()
-        appendo(l12, l3, int_list(3)) &
-        appendo(l1, l2, l12) &
-        eqo(v, list_from_array([l1, l2, l3]))
-      }
+    run_and_display(v => {
+      let (l1, l2, l3) = fresh_var_3()
+      let l12 = fresh_var()
+      appendo(l12, l3, int_list(3)) &
+      appendo(l1, l2, l12) &
+      eqo(v, list_from_array([l1, l2, l3]))
     }),
-    content=
+    content=(
       #|(() () (1 2 3))
       #|(() (1) (2 3))
       #|((1) () (2 3))
@@ -120,6 +113,6 @@ test "appendo" {
       #|((1) (2 3) ())
       #|((1 2) (3) ())
       #|((1 2 3) () ())
-    ,
+    ),
   )
 }

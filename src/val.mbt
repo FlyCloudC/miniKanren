@@ -1,15 +1,15 @@
 ///|
 /// Represents a unique identifier for logic variables.
-type VarId Int derive(Eq)
+struct VarId(Int) derive(Eq)
 
 ///|
 pub impl Hash for VarId with hash_combine(self, hasher) {
-  hasher.combine_int(self._)
+  hasher.combine_int(self.0)
 }
 
 ///|
 pub impl Hash for VarId with hash(self) {
-  self._
+  self.0
 }
 
 ///|
@@ -27,22 +27,19 @@ pub(all) enum Val {
 /// Example:
 ///
 /// ```moonbit
-/// ///|
-/// test "list_from_array" {
-///   assert_eq(
-///     list_from_array([Int(1), Int(2), Int(3)]),
-///     Pair(Int(1), Pair(Int(2), Pair(Int(3), Nil))),
-///   )
-/// }
+/// assert_eq(
+///   list_from_array([Int(1), Int(2), Int(3)]),
+///   Pair(Int(1), Pair(Int(2), Pair(Int(3), Nil))),
+/// )
 /// ```
 pub fn list_from_array(vs : Array[Val]) -> Val {
-  vs.rev_fold(init=Nil, fn { acc, v => Pair(v, acc) })
+  vs.rev_fold(init=Nil, (acc, v) => Pair(v, acc))
 }
 
 ///|
 fn new_fresh_var_generator() -> () -> Val {
   let mut i = -1
-  fn() {
+  () => {
     i += 1
     Var(i)
   }
@@ -88,9 +85,9 @@ const SUBSCRIPT_0 : Int = '₀'
 
 ///|
 pub impl Show for VarId with output(self, logger) {
-  guard self._ > 0 else { logger.write_string("_₀") }
+  guard self.0 > 0 else { logger.write_string("_₀") }
   let digits = Array::new(capacity=4)
-  for n = self._; n > 0; n = n / 10 {
+  for n = self.0; n > 0; n = n / 10 {
     digits.push((SUBSCRIPT_0 + n % 10).unsafe_to_char())
   }
   logger.write_char('_')

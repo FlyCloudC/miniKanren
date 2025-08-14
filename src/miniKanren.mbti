@@ -1,3 +1,4 @@
+// Generated using `moon info`, DON'T EDIT IT
 package "FlyCloudC/miniKanren"
 
 // Values
@@ -30,6 +31,8 @@ fn nilo(Val) -> Goal
 fn run((Val) -> Goal) -> Iter[Val]
 
 fn run1((Val) -> Goal) -> Val
+
+// Errors
 
 // Types and methods
 type Goal

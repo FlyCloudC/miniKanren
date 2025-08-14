@@ -11,12 +11,11 @@ More information:
 
 ```moonbit
 // find all lists whose 1 and 0 are both in it
-let solutions : Iter[Val] = run(fn {
-  v =>
-    listo(v) & //
-    membero(Int(1), v) &
-    membero(Int(0), v)
-})
+let solutions : Iter[Val] = run(v => 
+  listo(v) &
+  membero(Int(1), v) &
+  membero(Int(0), v)
+)
 
 solutions.take(10).each(println)
 ```

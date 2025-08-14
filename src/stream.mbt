@@ -7,16 +7,14 @@ priv enum Stream[A] {
 
 ///|
 fn[A] iter(self : Stream[A]) -> Iter[A] {
-  Iter::new(fn(yield_) {
-    loop self {
-      Empty => IterContinue
-      Cons(h, t) =>
-        match yield_(h) {
-          IterContinue => continue t
-          IterEnd => IterEnd
-        }
-      Suspension(f) => continue f()
-    }
+  Iter::new(yield_ => loop self {
+    Empty => IterContinue
+    Cons(h, t) =>
+      match yield_(h) {
+        IterContinue => continue t
+        IterEnd => IterEnd
+      }
+    Suspension(f) => continue f()
   })
 }
 
@@ -25,14 +23,14 @@ fn[A] mix(self : Stream[A], other : Stream[A]) -> Stream[A] {
   match self {
     Empty => other
     Cons(s1, s_) => Cons(s1, s_.mix(other))
-    Suspension(sd) => Suspension(fn() { other.mix(sd()) })
+    Suspension(sd) => Suspension(() => other.mix(sd()))
   }
 }
 
 ///|
 test "mix" {
   fn int_stream_from(i) {
-    Cons(i, Suspension(fn() { int_stream_from(i + 1) }))
+    Cons(i, Suspension(() => int_stream_from(i + 1)))
   }
 
   inspect(
@@ -49,14 +47,14 @@ fn[A] map_fold_mix(self : Stream[A], f : (A) -> Stream[A]) -> Stream[A] {
   match self {
     Empty => Empty
     Cons(s1, s_) => f(s1).mix(s_.map_fold_mix(f))
-    Suspension(sd) => Suspension(fn() { sd().map_fold_mix(f) })
+    Suspension(sd) => Suspension(() => sd().map_fold_mix(f))
   }
 }
 
 ///|
 test "map_fold_mix" {
   fn int_stream_from(i) {
-    Cons(i, Suspension(fn() { int_stream_from(i + 1) }))
+    Cons(i, Suspension(() => int_stream_from(i + 1)))
   }
 
   fn f(i) {
