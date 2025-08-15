@@ -81,14 +81,19 @@ pub impl Show for Val with output(self, logger) {
 }
 
 ///|
-const SUBSCRIPT_0 : Int = '₀'
+let subscript_digits : Array[Char] = [
+  '₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉',
+]
 
 ///|
 pub impl Show for VarId with output(self, logger) {
-  guard self.0 > 0 else { logger.write_string("_₀") }
+  guard self.0 > 0 else {
+    logger.write_string("_₀")
+    return
+  }
   let digits = Array::new(capacity=4)
   for n = self.0; n > 0; n = n / 10 {
-    digits.push((SUBSCRIPT_0 + n % 10).unsafe_to_char())
+    digits.push(subscript_digits[n % 10])
   }
   logger.write_char('_')
   digits.rev_each(logger.write_char(_))
