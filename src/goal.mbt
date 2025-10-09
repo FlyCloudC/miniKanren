@@ -23,11 +23,9 @@ struct Goal((Sub) -> Stream[Sub])
 /// inspect(run1(x => eqo(x, Int(42))), content="42")
 /// ```
 pub fn eqo(u : Val, v : Val) -> Goal {
-  Goal(fn(s) {
-    match s.unify(u, v) {
-      None => Empty
-      Some(s_) => Cons(s_, Empty)
-    }
+  Goal(s => match s.unify(u, v) {
+    None => Empty
+    Some(s_) => Cons(s_, Empty)
   })
 }
 
@@ -38,7 +36,7 @@ pub impl BitOr for Goal with lor(g1, g2) {
 
 ///|
 pub impl BitAnd for Goal with land(g1, g2) {
-  Goal(s => g1(s).map_fold_mix(g2.inner()))
+  Goal(s => g1(s).map_fold_mix(g2.0))
 }
 
 ///|
@@ -64,7 +62,7 @@ pub impl BitAnd for Goal with land(g1, g2) {
 /// inspect(run1(x => manyo(eqo(x, Int(1)))), content="1")
 /// ```
 pub fn delay(goal_fn : () -> Goal) -> Goal {
-  Goal(fn(s) { Suspension(() => goal_fn()(s)) })
+  Goal(s => Suspension(() => goal_fn()(s)))
 }
 
 ///|

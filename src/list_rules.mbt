@@ -16,7 +16,8 @@ pub fn caro(p : Val, a : Val) -> Goal {
   eqo(p, Pair(a, fresh_var()))
 }
 
-///| `cdro(p, d)` means that the cdr of `p` is `d`.
+///|
+/// `cdro(p, d)` means that the cdr of `p` is `d`.
 pub fn cdro(p : Val, d : Val) -> Goal {
   eqo(p, Pair(fresh_var(), d))
 }
@@ -75,7 +76,8 @@ test "membero" {
   )
 }
 
-///| `appendo(l1, l2, o)` means that the result of appending `l1` to `l2` is `o`.
+///|
+/// `appendo(l1, l2, o)` means that the result of appending `l1` to `l2` is `o`.
 pub fn appendo(l1 : Val, l2 : Val, o : Val) -> Goal {
   (nilo(l1) & eqo(l2, o)) |
   delay(() => {

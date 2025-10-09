@@ -50,12 +50,14 @@ fn new_fresh_var_generator() -> () -> Val {
 /// different variable.
 pub let fresh_var : () -> Val = new_fresh_var_generator()
 
-///| Creates 2 new, unique logic variables.
+///|
+/// Creates 2 new, unique logic variables.
 pub fn fresh_var_2() -> (Val, Val) {
   (fresh_var(), fresh_var())
 }
 
-///| Creates 3 new, unique logic variables.
+///|
+/// Creates 3 new, unique logic variables.
 pub fn fresh_var_3() -> (Val, Val, Val) {
   (fresh_var(), fresh_var(), fresh_var())
 }

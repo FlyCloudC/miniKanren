@@ -1,5 +1,6 @@
-///| A Substitution cannot contain two or more associations with the same car.
-priv struct Sub(@immut/hashmap.T[VarId, Val])
+///|
+/// A Substitution cannot contain two or more associations with the same car.
+priv struct Sub(@immut/hashmap.HashMap[VarId, Val])
 
 ///|
 let empty_substitution : Sub = Sub(@immut/hashmap.new())
