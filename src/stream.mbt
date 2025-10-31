@@ -6,7 +6,7 @@ priv enum Stream[A] {
 }
 
 ///|
-fn[A] iter(self : Stream[A]) -> Iter[A] {
+fn[A] Stream::iter(self : Stream[A]) -> Iter[A] {
   Iter::new(yield_ => loop self {
     Empty => IterContinue
     Cons(h, t) =>
@@ -19,7 +19,7 @@ fn[A] iter(self : Stream[A]) -> Iter[A] {
 }
 
 ///|
-fn[A] mix(self : Stream[A], other : Stream[A]) -> Stream[A] {
+fn[A] Stream::mix(self : Stream[A], other : Stream[A]) -> Stream[A] {
   match self {
     Empty => other
     Cons(s1, s_) => Cons(s1, s_.mix(other))
@@ -43,7 +43,7 @@ test "mix" {
 /// s = (s1 s2 s3 ...)
 /// 
 /// map_fold_mix(s, f) = mix(f(s1), mix(f(s2), mix(f(s3), ...)))
-fn[A] map_fold_mix(self : Stream[A], f : (A) -> Stream[A]) -> Stream[A] {
+fn[A] Stream::map_fold_mix(self : Stream[A], f : (A) -> Stream[A]) -> Stream[A] {
   match self {
     Empty => Empty
     Cons(s1, s_) => f(s1).mix(s_.map_fold_mix(f))

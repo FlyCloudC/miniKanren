@@ -18,7 +18,7 @@ fn walk(s : Sub, v : Val) -> Val {
 }
 
 ///|
-fn unify(self : Sub, v1 : Val, v2 : Val) -> Sub? {
+fn Sub::unify(s : Sub, v1 : Val, v2 : Val) -> Sub? {
   // w for walked Val, f for freshed Var
   // if Var(x) is walked, then x is freshed
 
@@ -27,7 +27,7 @@ fn unify(self : Sub, v1 : Val, v2 : Val) -> Sub? {
     fn occur_in_fx(wv) {
       match wv {
         Var(fv) => fx == fv
-        Pair(l, r) => occur_in_fx(walk(self, l)) || occur_in_fx(walk(self, r))
+        Pair(l, r) => occur_in_fx(walk(s, l)) || occur_in_fx(walk(s, r))
         _ => false
       }
     }
@@ -35,14 +35,14 @@ fn unify(self : Sub, v1 : Val, v2 : Val) -> Sub? {
     if occur_in_fx(wv) {
       None
     } else {
-      Some(Sub(self.0.add(fx, wv)))
+      Some(Sub(s.0.add(fx, wv)))
     }
   }
 
-  match (walk(self, v1), walk(self, v2)) {
-    (wv1, wv2) if wv1 == wv2 => Some(self)
+  match (walk(s, v1), walk(s, v2)) {
+    (wv1, wv2) if wv1 == wv2 => Some(s)
     (Var(fx), wv) | (wv, Var(fx)) => ext(fx, wv)
-    (Pair(l1, r1), Pair(l2, r2)) => self.unify(l1, l2).bind(_.unify(r1, r2))
+    (Pair(l1, r1), Pair(l2, r2)) => s.unify(l1, l2).bind(_.unify(r1, r2))
     _ => None
   }
 }
