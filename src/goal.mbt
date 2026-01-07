@@ -58,7 +58,7 @@ pub impl BitAnd for Goal with land(g1, g2) {
 /// fn manyo(g : Goal) -> Goal {
 ///   g | delay(() => manyo(g))
 /// }
-/// 
+///
 /// inspect(run1(x => manyo(eqo(x, Int(1)))), content="1")
 /// ```
 pub fn delay(goal_fn : () -> Goal) -> Goal {

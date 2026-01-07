@@ -7,15 +7,18 @@ priv enum Stream[A] {
 
 ///|
 fn[A] Stream::iter(self : Stream[A]) -> Iter[A] {
-  Iter::new(yield_ => loop self {
-    Empty => IterContinue
-    Cons(h, t) =>
-      match yield_(h) {
-        IterContinue => continue t
-        IterEnd => IterEnd
-      }
-    Suspension(f) => continue f()
-  })
+  let mut stream = self
+  Iterator::new(() => match stream {
+    Empty => None
+    Cons(h, t) => {
+      stream = t
+      Some(h)
+    }
+    Suspension(f) => {
+      stream = f()
+      None
+    }
+  }).iter()
 }
 
 ///|
