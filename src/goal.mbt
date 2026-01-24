@@ -58,7 +58,7 @@ pub impl BitAnd for Goal with land(g1, g2) {
 /// fn manyo(g : Goal) -> Goal {
 ///   g | delay(() => manyo(g))
 /// }
-/// 
+///
 /// inspect(run1(x => manyo(eqo(x, Int(1)))), content="1")
 /// ```
 pub fn delay(goal_fn : () -> Goal) -> Goal {
@@ -106,7 +106,7 @@ pub fn run(query : (Val) -> Goal) -> Iter[Val] {
 /// ```
 #internal(unsafe, "Panic if there is no solution.")
 pub fn run1(query : (Val) -> Goal) -> Val {
-  run(query).peek().unwrap()
+  run(query).next().unwrap()
 }
 
 ///|

@@ -1,9 +1,9 @@
 ///|
 /// A Substitution cannot contain two or more associations with the same car.
-priv struct Sub(@immut/hashmap.HashMap[VarId, Val])
+priv struct Sub(@immut_hashmap.HashMap[VarId, Val])
 
 ///|
-let empty_substitution : Sub = Sub(@immut/hashmap.new())
+let empty_substitution : Sub = Sub(@immut_hashmap.new())
 
 ///|
 fn walk(s : Sub, v : Val) -> Val {
