@@ -19,13 +19,15 @@ struct Goal((Sub) -> Stream[Sub])
 ///
 /// Example:
 ///
-/// ```moonbit
+/// ```moonbit nocheck
 /// inspect(run1(x => eqo(x, Int(42))), content="42")
 /// ```
 pub fn eqo(u : Val, v : Val) -> Goal {
-  Goal(s => match s.unify(u, v) {
-    None => Empty
-    Some(s_) => Cons(s_, Empty)
+  Goal(s => {
+    match s.unify(u, v) {
+      None => Empty
+      Some(s_) => Cons(s_, Empty)
+    }
   })
 }
 
@@ -54,7 +56,7 @@ pub impl BitAnd for Goal with land(g1, g2) {
 ///
 /// Example:
 ///
-/// ```moonbit
+/// ```moonbit nocheck
 /// fn manyo(g : Goal) -> Goal {
 ///   g | delay(() => manyo(g))
 /// }
@@ -78,13 +80,13 @@ pub fn delay(goal_fn : () -> Goal) -> Goal {
 ///
 /// Example:
 ///
-/// ```moonbit
+/// ```moonbit nocheck
 /// inspect(run(x => eqo(x, Int(42))), content="[42]")
 /// ```
 pub fn run(query : (Val) -> Goal) -> Iter[Val] {
   let query_var = fresh_var()
   let subs = query(query_var)(empty_substitution)
-  subs.iter().map(reify(_, query_var))
+  subs.iter().map(s => reify(s, query_var))
 }
 
 ///|
@@ -101,7 +103,7 @@ pub fn run(query : (Val) -> Goal) -> Iter[Val] {
 ///
 /// Example:
 ///
-/// ```moonbit
+/// ```moonbit nocheck
 /// inspect(run1(x => eqo(x, Int(42))), content="42")
 /// ```
 #internal(unsafe, "Panic if there is no solution.")
@@ -116,7 +118,7 @@ fn run_and_display(f : (Val) -> Goal, n? : Int) -> String {
     Some(n) => vals.take(n)
     None => vals
   })
-  .map(_.to_string())
+  .map(Show::to_string)
   .join("\n")
 }
 

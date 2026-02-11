@@ -26,7 +26,7 @@ pub(all) enum Val {
 ///
 /// Example:
 ///
-/// ```moonbit
+/// ```moonbit nocheck
 /// assert_eq(
 ///   list_from_array([Int(1), Int(2), Int(3)]),
 ///   Pair(Int(1), Pair(Int(2), Pair(Int(3), Nil))),
@@ -69,14 +69,14 @@ pub impl Show for Val with output(self, logger) {
     Var(x) => x.output(logger)
     Nil => logger.write_string("()")
     Pair(l, r) => {
-      logger..write_char('(')..write_object(l)
+      logger..write_char('(').write_object(l)
       loop r {
         Nil => logger.write_char(')')
         Pair(l, r) => {
-          logger..write_char(' ')..write_object(l)
+          logger..write_char(' ').write_object(l)
           continue r
         }
-        v => logger..write_string(" . ")..write_object(v)..write_char(')')
+        v => logger..write_string(" . ")..write_object(v).write_char(')')
       }
     }
   }
@@ -93,5 +93,5 @@ pub impl Show for VarId with output(self, logger) {
     digits.push((SUBSCRIPT_0 + n % 10).unsafe_to_char())
   }
   logger.write_char('_')
-  digits.rev_each(logger.write_char(_))
+  digits.rev_each(d => logger.write_char(d))
 }

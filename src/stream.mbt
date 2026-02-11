@@ -8,13 +8,15 @@ priv enum Stream[A] {
 ///|
 fn[A] Stream::iter(self : Stream[A]) -> Iter[A] {
   let mut s = self
-  Iter::new(() => loop s {
-    Empty => None
-    Cons(h, t) => {
-      s = t
-      Some(h)
+  Iter::new(() => {
+    loop s {
+      Empty => None
+      Cons(h, t) => {
+        s = t
+        Some(h)
+      }
+      Suspension(f) => continue f()
     }
-    Suspension(f) => continue f()
   })
 }
 

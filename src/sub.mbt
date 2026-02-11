@@ -42,7 +42,7 @@ fn Sub::unify(s : Sub, v1 : Val, v2 : Val) -> Sub? {
   match (walk(s, v1), walk(s, v2)) {
     (wv1, wv2) if wv1 == wv2 => Some(s)
     (Var(fx), wv) | (wv, Var(fx)) => ext(fx, wv)
-    (Pair(l1, r1), Pair(l2, r2)) => s.unify(l1, l2).bind(_.unify(r1, r2))
+    (Pair(l1, r1), Pair(l2, r2)) => s.unify(l1, l2).bind(s => s.unify(r1, r2))
     _ => None
   }
 }
