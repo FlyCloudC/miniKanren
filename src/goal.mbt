@@ -32,12 +32,12 @@ pub fn eqo(u : Val, v : Val) -> Goal {
 }
 
 ///|
-pub impl BitOr for Goal with lor(g1, g2) {
+pub impl BitOr for Goal with fn lor(g1, g2) {
   Goal(s => g1(s).mix(g2(s)))
 }
 
 ///|
-pub impl BitAnd for Goal with land(g1, g2) {
+pub impl BitAnd for Goal with fn land(g1, g2) {
   Goal(s => g1(s).map_fold_mix(g2.0))
 }
 

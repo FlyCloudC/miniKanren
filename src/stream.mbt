@@ -9,13 +9,15 @@ priv enum Stream[A] {
 fn[A] Stream::iter(self : Stream[A]) -> Iter[A] {
   let mut s = self
   Iter::new(() => {
-    loop s {
-      Empty => None
-      Cons(h, t) => {
-        s = t
-        Some(h)
+    for s_ = s {
+      match s_ {
+        Empty => break None
+        Cons(h, t) => {
+          s = t
+          break Some(h)
+        }
+        Suspension(f) => continue f()
       }
-      Suspension(f) => continue f()
     }
   })
 }
@@ -35,9 +37,11 @@ test "mix" {
     Cons(i, Suspension(() => int_stream_from(i + 1)))
   }
 
-  inspect(
-    int_stream_from(100).mix(int_stream_from(200)).iter().take(10),
-    content="[100, 200, 101, 201, 102, 202, 103, 203, 104, 204]",
+  debug_inspect(
+    int_stream_from(100).mix(int_stream_from(200)).iter().take(10).to_array(),
+    content=(
+      #|[100, 200, 101, 201, 102, 202, 103, 203, 104, 204]
+    ),
   )
 }
 

@@ -3,12 +3,12 @@
 struct VarId(Int) derive(Eq)
 
 ///|
-pub impl Hash for VarId with hash_combine(self, hasher) {
+pub impl Hash for VarId with fn hash_combine(self, hasher) {
   hasher.combine_int(self.0)
 }
 
 ///|
-pub impl Hash for VarId with hash(self) {
+pub impl Hash for VarId with fn hash(self) {
   self.0
 }
 
@@ -63,20 +63,21 @@ pub fn fresh_var_3() -> (Val, Val, Val) {
 }
 
 ///|
-pub impl Show for Val with output(self, logger) {
+pub impl Show for Val with fn output(self, logger) {
   match self {
     Int(i) => i.output(logger)
     Var(x) => x.output(logger)
     Nil => logger.write_string("()")
     Pair(l, r) => {
       logger..write_char('(').write_object(l)
-      loop r {
-        Nil => logger.write_char(')')
-        Pair(l, r) => {
-          logger..write_char(' ').write_object(l)
-          continue r
+      for r = r; r is Pair(l, r); {
+        logger..write_char(' ').write_object(l)
+        continue r
+      } nobreak {
+        match r {
+          Nil => logger.write_char(')')
+          v => logger..write_string(" . ")..write_object(v).write_char(')')
         }
-        v => logger..write_string(" . ")..write_object(v).write_char(')')
       }
     }
   }
@@ -86,7 +87,7 @@ pub impl Show for Val with output(self, logger) {
 const SUBSCRIPT_0 : Int = '₀'
 
 ///|
-pub impl Show for VarId with output(self, logger) {
+pub impl Show for VarId with fn output(self, logger) {
   guard self.0 > 0 else { logger.write_string("_₀") }
   let digits = Array::new(capacity=4)
   for n = self.0; n > 0; n = n / 10 {

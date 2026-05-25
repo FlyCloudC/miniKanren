@@ -1,0 +1,17 @@
+name = "FlyCloudC/miniKanren"
+
+version = "0.1.7"
+
+readme = "README.md"
+
+repository = "https://github.com/FlyCloudC/miniKanren"
+
+license = "Apache-2.0"
+
+keywords = [ "logic programming" ]
+
+description = "A Domain Specific Languages for logic programming"
+
+options(
+  source: "src",
+)

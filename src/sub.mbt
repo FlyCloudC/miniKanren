@@ -7,13 +7,13 @@ let empty_substitution : Sub = Sub(@immut_hashmap.new())
 
 ///|
 fn walk(s : Sub, v : Val) -> Val {
-  loop v {
-    Var(x) as v =>
-      match s.0.get(x) {
-        None => v
-        Some(v_) => continue v_
-      }
-    wv => wv
+  for v = v; v is Var(x); {
+    match s.0.get(x) {
+      None => break v
+      Some(v_) => continue v_
+    }
+  } nobreak {
+    v
   }
 }
 
@@ -49,7 +49,7 @@ fn Sub::unify(s : Sub, v1 : Val, v2 : Val) -> Sub? {
 
 ///|
 fn reify(s : Sub, v : Val) -> Val {
-  let map = @hashmap.new()
+  let map = @hashmap.HashMap([])
   let next_var = new_fresh_var_generator()
   fn replace(v) {
     match walk(s, v) {
