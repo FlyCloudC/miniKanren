@@ -65,18 +65,18 @@ pub fn fresh_var_3() -> (Val, Val, Val) {
 ///|
 pub impl Show for Val with fn output(self, logger) {
   match self {
-    Int(i) => i.output(logger)
-    Var(x) => x.output(logger)
-    Nil => logger.write_string("()")
+    Int(i) => logger <+ "\{i}"
+    Var(x) => logger <+ "\{x}"
+    Nil => logger <+ "()"
     Pair(l, r) => {
-      logger..write_char('(').write_object(l)
+      logger <+ "(\{l}"
       for r = r; r is Pair(l, r); {
-        logger..write_char(' ').write_object(l)
+        logger <+ " \{l}"
         continue r
       } nobreak {
         match r {
           Nil => logger.write_char(')')
-          v => logger..write_string(" . ")..write_object(v).write_char(')')
+          v => logger <+ " . \{v})"
         }
       }
     }
@@ -88,11 +88,10 @@ const SUBSCRIPT_0 : Int = '₀'
 
 ///|
 pub impl Show for VarId with fn output(self, logger) {
-  guard self.0 > 0 else { logger.write_string("_₀") }
-  let digits = Array::new(capacity=4)
-  for n = self.0; n > 0; n = n / 10 {
-    digits.push((SUBSCRIPT_0 + n % 10).unsafe_to_char())
-  }
+  guard self.0 > 0 else { logger <+ "_₀" }
+  let digits = [
+    for n = self.0; n > 0; n = n / 10 => (SUBSCRIPT_0 + n % 10).unsafe_to_char()
+  ]
   logger.write_char('_')
   digits.rev_each(d => logger.write_char(d))
 }

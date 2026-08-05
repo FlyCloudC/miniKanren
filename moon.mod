@@ -1,6 +1,6 @@
 name = "FlyCloudC/miniKanren"
 
-version = "0.1.8"
+version = "0.1.9"
 
 readme = "README.md"
 
@@ -12,6 +12,4 @@ keywords = [ "logic programming" ]
 
 description = "A Domain Specific Languages for logic programming"
 
-options(
-  source: "src",
-)
+source = "src"

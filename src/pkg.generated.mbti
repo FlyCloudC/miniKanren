@@ -44,16 +44,13 @@ pub(all) enum Val {
   Nil
   Pair(Val, Val)
   Var(VarId)
-}
-pub impl Eq for Val
+} derive(Eq)
 pub impl Show for Val
 
-type VarId
-pub impl Eq for VarId
+type VarId derive(Eq)
 pub impl Hash for VarId
 pub impl Show for VarId
 
 // Type aliases
 
 // Traits
-
